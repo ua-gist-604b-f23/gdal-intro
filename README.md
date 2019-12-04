@@ -98,3 +98,6 @@ Answer the following questions and add them to `answers-2.md`:
 7) What command is used to create tiles from a large raster?
 8) What command is used to transform between vector formats?
 9) What command is used to display metadata for a vector file?
+
+[![DOI](https://zenodo.org/badge/208732242.svg)](https://zenodo.org/badge/latestdoi/208732242)
+
