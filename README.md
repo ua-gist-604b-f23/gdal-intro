@@ -33,7 +33,7 @@ I would like you to peruse the list of GDAL programs on https://gdal.org/program
 as the OGR programs on https://gdal.org/programs/ogrinfo.html/. Read the `Synopsis`, `Description`, and `Example` of each of 
 the programs in the lists. 
 
-### 1. From the GDAL and OGR Program List, find 8 programs, describe them, and compare them with other tools that perform similar functions that you are already familiar with. Add this to `answers-1.md`
+From the GDAL and OGR Program List, find 8 programs, describe them, and compare them with other tools that perform similar functions that you are already familiar with. Add this to `answers-1.md`
 
 ## Assignment: Part 2 (GDAL Tutorial)
 
