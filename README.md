@@ -85,7 +85,7 @@ Metadata:
   AREA_OR_POINT=Area
 Image Structure Metadata:
   INTERLEAVE=PIXEL
-```
+
 Corner Coordinates:
 Upper Left  (  579185.000, 4244814.000) (110d 5'37.69"W, 38d20'52.73"N)
 Lower Left  (  579185.000, 4213134.000) (110d 5'50.41"W, 38d 3'45.00"N)
