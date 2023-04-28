@@ -1,5 +1,17 @@
-# GDAL and OGR Intro
+# GDAL Intro
 ## Assignment
+
+The objective of this assignment is to gain experience with `gdal` and some of its tools by working with imagery through a couple tutorials.
+
+### Deliverables
+A Pull Request on a branch named `assignment` to be merged with `master` containing the following files:
+- CANYrelief1.jpg
+- NE1_50M_SR_W_tenth_mollweide_1400.png
+- NE1_50M_SR_W_sh60_polarstereo_1400.png
+- NE1_50M_SR_W_nh60_polarstereo_1400.png
+- screencap_tiles.png
+- canyonlands_terrain_1400.png
+- canyonlands_watercolor_1400.png
 
 ### Background
 
@@ -19,6 +31,9 @@ Reference:
 - [GDAL Wikipedia](https://en.wikipedia.org/wiki/GDAL)
 
 ## Deliverables
+- CANYrelief1.jpg
+- NE1_50M_SR_W_tenth_mollweide_1400.png
+- NE1_50M_SR_W_tenth_polarstereo.jpg
 - 
 
 ## Objective: Explore gdal
@@ -126,6 +141,9 @@ These are just the input file name and the output file name, respectively (but b
 
 `gdalinfo` and `gdal_translate` are two of the more straightforward utilities included with GDAL. And, to be honest, there are a thousand ways to convert a TIFF to a JPEG—but not nearly so many are also able to read the headers in a geotiff, translate obscure data formats (if you do data visualization long enough, you’ll run into some special files), or transform a map from one projection to another. Next up is Part 2: Map Projections & gdalwarp, which begins to unlock the power of geospatial data, but requires some familiarity with map projections (spoiler: the Earth isn’t flat).
 
+### Deliverables for this section:
+- CANYrelief1.jpg
+
 ## Assignment: Part 2
 This is adapted (stolen) from Robert Simmon's tutorial, [A gentle introduction to gdal Part 1](https://medium.com/planet-stories/a-gentle-introduction-to-gdal-part-1-a3253eb96082).
 
@@ -201,10 +219,16 @@ Rather than describing each property, I’ll just recommend that you find the de
 
 Finally, I’ve added the option `-dstalpha` so the areas that are (literally) off the map are made transparent, instead of given a fill color (black by default).
 
-[Preview image]
+To view in codespaces we need a smaller image. Create a jpeg of the same image (this is an assignment deliverable):
+```
+gdal_translate -of PNG -outsize 1400 0 -r bilinear NE1_50M_SR_W_tenth_mollweide.tif ../NE1_50M_SR_W_tenth_mollweide_1400.png
+```
 
 The Mollweide projection, which is equal-area and has the bonus feature of maintaining straight lines of latitude. Made with Natural Earth.
 Perfect!
+
+### Deliverables for this section:
+- NE1_50M_SR_W_tenth_mollweide_1400.png
 
 ### The Polar Stereographic Projection
 Well, no, not perfect—every map is a compromise, remember? What if we wanted to focus on the poles? They’re undefined in Mercator, and shunted off to the edges on most other global maps, including Mollweide. Fortunately, there’s a special map projection designed specifically for the Arctic and Antarctic: polar stereographic.
@@ -218,87 +242,35 @@ Instead of letting gdal_translate write the default GeoTIFF, I’ve used `-of` t
 
 With a nice compact (and quick to make) VRT, here’s the command to make a map of Antarctica:
 
-[image preview]
-
 ```
 gdalwarp -t_srs EPSG:3976 -ts 7200 0 -r near -dstalpha -wo SOURCE_EXTRA=1000 -co COMPRESS=LZW NE1_50M_SR_W_SH60.vrt NE1_50M_SR_W_sh60_polarstereo.tif
 ```
 It starts like the command for Mercator, specifying the target spatial reference system with an EPSG code: EPSG:3976. Then it gets (very slightly) weird. I’ve forced the target size to be 7,200 pixels with `-ts 7200 0` and then set resampling to nearest neighbor with `-r near`. This gets around a nasty issue that was blurring pixels along the +/−180˚ line, at the expense of making the map look pixellated (at least if you zoom in). The rest mirrors the previous commands.
 
-I set the target size to be so much larger than the resolution needed for this post (only 1,400 pixels across) so that I could reduce the resolution with a resampling method that averages pixels—bilinear. Here’s a gdal_translate command to shrink the image and save it as a PNG, a nice lossless compression method (like GIF) that also retains full color (like JPEG) and displays on the Web.
+I set the target size to be so much larger than the resolution needed for this post (only 1,400 pixels across) so that I could reduce the resolution with a resampling method that averages pixels—bilinear. Here’s a gdal_translate command to shrink the image and save it as a PNG, a nice lossless compression method (like GIF) that also retains full color (like JPEG) and displays on the Web (this is an assignment deliverable):
 ```
-gdal_translate -of PNG -outsize 1400 0 -r bilinear NE1_50M_SR_W_sh60_polarstereo.tif NE1_50M_SR_W_sh60_polarstereo_1400.png
+gdal_translate -of PNG -outsize 1400 0 -r bilinear NE1_50M_SR_W_sh60_polarstereo.tif ../NE1_50M_SR_W_sh60_polarstereo_1400.png
 ```
-[image preview]
-
 A polar stereographic projection, centered on the South Pole and extending to 60˚ south. Notice how razor-sharp the edge is—that’s the result of the render large then downsize technique, combined with lossless compression. Made with Natural Earth.
 
 Huzzah!
 
-A nice map of Antarctica extending from the South Pole to 60˚ north. I’ll leave it as an exercise for the reader to make a similar map of the Northern Hemisphere.
+A nice map of Antarctica extending from the South Pole to 60˚ north. Finally, make a similar map of the Northern Hemisphere.
 
-One final note: although GDAL is very powerful and very flexible, it can’t do everything in mapping. Some projections, even some of my favorites like Hammer-Aitoff, Winkel-tripel, and Natural Earth, are not fully supported. Before trying out your favorite projection check the Spatial Reference database and if the proj.4 entry is blank, it probably won’t work. The good news is support for some new map projections is underway.
-
-Phew. Next up: geodesy, local map projections & gdal_merge.py.
+### Deliverables for this section:
+- NE1_50M_SR_W_sh60_polarstereo_1400.png
+- NE1_50M_SR_W_nh60_polarstereo_1400.png
 
 
 ## Assignment: Part 3
 This is adapted (stolen) from Robert Simmon's tutorial, [A Gentle Introduction to GDAL, Part 3: Geodesy & Local Map Projections](https://medium.com/planet-stories/a-gentle-introduction-to-gdal-part-3-geodesy-local-map-projections-794c6ff675ca).
 
 ### Crafting Local Maps
-There are two fundamental ways to make a map of a specific region: start with a large dataset and cut out the bit you’re interested in, or build the map from smaller pieces. I’ll start with a large map, the high-res version of the Natural Earth raster dataset I used in part 2. If you’re not up for the 300MB download, just use the smaller one and change the file names to match.)
 
-
-I could just use gdal_translate with -projwin option to crop out a latitude and longitude, but, as I’ve discussed, cylindrical equirectangular isn’t a great projection for global maps, and it’s worse for most local and regional maps. Which begs the question—how to choose a better one?
-
-Hacks borrow, artists steal.
-
-If you’re making a map of a place that’s already been mapped by experts, just look up what they did and copy it! In this case, I just found a National Geographic wall map of India and read the projection off the description: Transverse Mercator. Professional cartographers will almost universally include projection and scale info on their maps. They also overlay maps with graticules (lines of latitude and longitude) so I estimated the proper extents from those. Here’s the code:
-```
-gdalwarp -t_srs '+proj=tmerc +lat_0=0 +lon_0=84 +k=0.9996 +datum=WGS84 +units=m +no_defs ' -te 66 6 100 41 -te_srs EPSG:4326 -ts 1400 0 -r bilinear NE1_HR_LC_SR_W.tif india_tmerc.tif
-```
-Most of this should look familiar. I’ve written out the target spatial reference system, `-t_srs`, since I couldn’t find a ready-made EPSG. Transverse Mercator is specified by `+proj=tmerc` followed by a few more variables:
-
-```
-+lat_0=0 +lon_0=84 +k=0.9996 +datum=WGS84 +units=m +no_defs
-```
-`+lat_0=0` specifies the latitude of the origin (the Equator), `+lon_0=84` specifies the longitude of origin—the only meridian that will be vertical (84˚). `+k=0.9996` is a scaling factor that helps spread the distortion across the map. Set to 1, There’s no distortion along the central meridian, but distortion increases out towards the edges. With a value less than 1, there are two meridians on either side of the center with no distortion, and a little bit of distortion at the center and a little bit at the edges, but limits total distortion. It’s a compromise. I’ve defined the datum as WGS84 with +datum=WGS84, which matches the source dataset and prevents having to worry about datum switching, which can be painful. Finally `+units=m` defines the units (Transverse Mercator is a projected coordinate system so it needs linear units) and `+no_defs` prevents proj.4 from using defaults settings, which could theoretically cause problems.
-
-The other interesting part of the command is this:
-
-```
--te 66 6 100 41 -te_srs EPSG:4326
-```
-This sets the target extent in units defined by the spatial reference system specified with `-te_srs`, our good friend EPSG:4326, or simple latitude and longitude. (This is one of the new features in GDAL 2.) If you set `-te` without `-te_srs` you need to figure out what the boundaries of your map should be in the target SRS, which is often meters that are specific to an origin point that can be mysterious. This is often hard (for me, at least), so I find it easier to define my boundaries in latitude and longitude. The final few commands I’ve shown before:
-
-```
-ts 1400 0 -r bilinear NE1_HR_LC_SR_W.tif india_tmerc.tif
-```
-These set the target size in pixels (by setting height to 0 GDAL will automatically figure out how tall the map should be), resampling method to bilinear in the names of the input file and output file.
-
-But what happens if you’re making a unique map, not of something that’s been done a million times before like a country or a province? How do you pick a map projection then? With the fantastic Projection Wizard, by Bojan Šavrič.
-
-### The Projection Wizard interface.
-*Note: if you have trouble with this, use the projection listed below*
-
-All you have to do is drag a box around the area of interest, select the type of map you want; equal-area, conformal, or equidistant; then hit the “PROJ.4” link for the projection you want (there are options), which will spit out a text string to drop in -t_srs. So good.
-
-```
-+proj=eqdc +lat_1=38.02777777777778 +lat_2=38.47222222222222 +lon_0=-109.875
-```
-My only quibble is that the interface uses degrees, minutes, seconds, and GDAL uses decimal degrees. You may want to trim those to round numbers, and likewise for the extents. Like so:
-
-```
-gdalwarp -t_srs '+proj=eqdc +lat_1=38.025 +lat_2=38.470 +lon_0=-109.875' -te -110.5 37.75 -109.25 38.75 -te_srs EPSG:4326 -ts 1400 0 -r bilinear NE1_HR_LC_SR_W.tif NE1_HR_LC_SR_W_canyonlands_eqdc_1400.tif
-```
-Oops. Not very sharp, is it?
-
-[image preview]
-
-It’s not that useful to make a large-scale (local) map with a small-scale (global) dataset. Looks like I need another data source. Conveniently, there’s a high-res (1:100,000-scale) version of Natural Earth covering the United States. Not so conveniently, it’s really, really big—4.72 GB big, to be precise. We'll try to download it ourselves here.
+We're going to build a map from a very larege dataset. here’s a high-res (1:100,000-scale) version of Natural Earth covering the United States. Not so conveniently, it’s really, really big—4.72 GB big, to be precise. We'll try to download it ourselves here.
 First, return to your home directory in Terminal:
 ```
-cd
+cd $
 ```
 Then download the large image, unzip it, and `cd` into the directory it's unzipped to:
 ```
@@ -314,14 +286,18 @@ Now we are going to chop it up into 512x512 tiles:
 ```
 mkdir tiles
 gdal_retile.py -ps 512 512 -targetDir tiles canyonlands_eqdc_1400.tif
+ls -al tiles/
 ```
-[image preview in tiles/ directory]
+Take a screenshot of the terminal window showing the tiles that were created and save it as `screencap_tiles.png`
+
+### Deliverables for this section:
+- screencap_tiles.png
 
 ### gdal_merge
 
 `gdal_merge` is a helper utility written in Python—it’s not a core part of GDAL. In fact, Frank says he wrote it as a demo (which is why the feature set may seem limited and syntax inconsistent) but people found it useful so it stuck around. And yes, it is useful. Unzip the download, navigate to the natural_earth_100k_canyonlands directory in your command line, and run the following command:
 ```
-gdal_merge.py -o canyonlands_merged.tif *.tif
+gdal_merge.py -o ../canyonlands_merged.tif tiles/*.tif
 ```
 That’s it. `gdal_merge.py` invokes the script, `-o canyonlands_merged.tif` specifies the name of the output file, and `*.tif` is a wildcard that opens up every file in the directory ending with .tif. What `gdal_merge` doesn’t do is any type of reprojection (but it can crop with `-ul_lr` and resize with `-ps` ). So the output file is Web Mercator, just like the input files. Equidistant conic is more appropriate for this region, so use the same gdalwarp command as before (with one change) to reproject the data:
 
@@ -329,13 +305,11 @@ That’s it. `gdal_merge.py` invokes the script, `-o canyonlands_merged.tif` spe
 gdalwarp -t_srs '+proj=eqdc +lat_1=38.025 +lat_2=38.470 +lon_0=-109.875' -ts 1400 0 -r bilinear -dstalpha canyonlands_merged.tif NE1_HR_LC_SR_W_canyonlands_ne_eqdc_1400.tif
 ```
 
-[image preview]
 I’ve omitted the `te` and `te_srs` options—`gdalwarp` is smart and matches the extents of the output file to the input file, which can be convenient, and results in the subtle cuve along the edges of the map above. To match the boundary of the original (blurry) map, use:
 
 ```
 gdalwarp -t_srs '+proj=eqdc +lat_1=38.025 +lat_2=38.470 +lon_0=-109.875' -te -110.5 37.75 -109.25 38.75 -te_srs EPSG:4326 -ts 1400 0 -r bilinear canyonlands_merged.tif canyonlands_ne_eqdc_te_1400.tif
 ```
-[image preview]
 
 Looking carefully, it’s evident that even this map isn’t quite detailed enough to display at this size—it needs a slightly higher-resoluton data source. In the not-so-distant past, you’d probably be limited to 7.5 minute USGS topographic maps (or their international equivalents), or custom made maps for specific locations (like U.S. national park maps). But in the past decade or so there’s been an explosion of mapping on the web, both commercial (Google Maps, MapBox) and open-source (Open Street Map). Typically they’re limited to display in a browser, or on a mobile device (that’s what these maps are made for, after all).
 
@@ -352,6 +326,7 @@ The most common web mapping tiling scheme consists of a a zoom level, an x coord
 This consistent scheme provides a mechanism for GDAL to decode, and the ability to convert web tiles into a georeferenced file. The code to generate a map of the Canyonlands is deceptively simple:
 ```
 gdal_translate -projwin -110.75 39 -109 37.5 -projwin_srs EPSG:4326 -outsize 4096 0 frmt_wms_stamen_terrain_tms.xml canyonlands_terrain_4096.tif
+```
 It looks just like a normal use of gdal_translate, but instead of pointing to an image, it’s pointing to an XML file (included here):
 ```
 <GDAL_WMS>
@@ -389,6 +364,23 @@ The final step is to convert the map from Web Mercator to equidistant conic with
 ```
 gdalwarp -t_srs '+proj=eqdc +lat_1=38.025 +lat_2=38.470 +lon_0=-109.875' -te -110.5 37.75 -109.25 38.75 -te_srs EPSG:4326 -ts 1400 0 -r bilinear canyonlands_terrain_4096.tif canyonlands_terrain_eqdc_1400.tif
 ```
-[image Preview]  Map of the Canyonlands, using terrain tiles ©Stamen Design, cc by s.a. 3.0. Notice the presence of fine details missing in the Natural Earth map above. In fact, one could argue there is an overwhelming amount of detail. One important part of making maps is finding the balance between precision and readability.
+Next, generate a smaller png image:
+```
+gdal_translate -of PNG -outsize 1400 0 -r bilinear canyonlands_terrain_4096.tif canyonlands_terrain_1400.png
+```
+Finally, update the `frmt_wms_stamen_terrain_tms.xml` and change `terrain-background` to `watercolor` to allow gdal to draw tiles from a different stamen web service. Re-run the last few commands to create new files named `canyonlands_watercolor_4096.tif` and `canyonlands_watercolor_1400.png` that represent the watercolor versions of the web service.
+
+### Deliverables for this section:
+- canyonlands_terrain_1400.png
+- canyonlands_watercolor_1400.png
 
 With these tools the wide variety of government and open-source data available, I hope you’ll be able to get started making your own maps. But what if you want to go beyond idealized base maps, and explore a photo-realistic view of the world, or show change over time? That will be the topic of my next post—processing satellite data, including Planet, Landsat, and Sentinel, with GDAL.
+
+## Deliverables
+- CANYrelief1.jpg
+- NE1_50M_SR_W_tenth_mollweide_1400.png
+- NE1_50M_SR_W_sh60_polarstereo_1400.png
+- NE1_50M_SR_W_nh60_polarstereo_1400.png
+- screencap_tiles.png
+- canyonlands_terrain_1400.png
+- canyonlands_watercolor_1400.png
