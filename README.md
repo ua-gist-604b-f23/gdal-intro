@@ -30,14 +30,6 @@ Reference:
 - [GDAL Homepage](https://gdal.org/)
 - [GDAL Wikipedia](https://en.wikipedia.org/wiki/GDAL)
 
-## Deliverables
-- CANYrelief1.jpg
-- NE1_50M_SR_W_tenth_mollweide_1400.png
-- NE1_50M_SR_W_tenth_polarstereo.jpg
-- 
-
-## Objective: Explore gdal
-
 ## Assignment: Part 1 
 This is adapted (mostly stolen) from Robert Simmon's tutorial, [A gentle introduction to gdal Part 1](https://medium.com/planet-stories/a-gentle-introduction-to-gdal-part-1-a3253eb96082).
 
