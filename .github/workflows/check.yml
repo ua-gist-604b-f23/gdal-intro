@@ -17,4 +17,9 @@ jobs:
         id: check_file
         uses: andstor/file-existence-action@v1
         with:
-          files: ${{ matrix.filename }}
+          files: ${{ matrix.filename }}      
+      - name: Required files exist
+        if: steps.check_file.outputs.files_exists != 'true'
+        run: |
+          echo Required file, ${{ matrix.filename }} , is missing
+          exit 1
